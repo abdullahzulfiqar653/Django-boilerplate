@@ -1,5 +1,29 @@
 version: "3.9"
 services:
+  # redis
+  redis:
+    image: redis
+    container_name: redis
+
+  # Databases
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: 'django-db'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
+    volumes:
+      - ./data/mysql/dbb:/var/lib/mysql
+  db1:
+    image: postgres
+    volumes:
+     - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    container_name: postgres_db
+
+  # Django app
   web:
     build: .
     ports:
@@ -7,5 +31,23 @@ services:
     volumes:
       - .:/django
     image: web:django
-    container_name: django_project
+    container_name: django_poject_container
     command: python manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - db
+      - db1
+
+  # Celery
+  celery:
+    restart: always
+    build:
+      context: .
+    command: celery -A server worker -l INFO
+    volumes:
+      - .:/django
+    container_name: celery
+    depends_on:
+      - db
+      - db1
+      - redis
+      - web
