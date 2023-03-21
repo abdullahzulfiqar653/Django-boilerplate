@@ -28,6 +28,7 @@ media
 .Python
 build/
 staticfiles/
+static/
 develop-eggs/
 dist/
 downloads/
