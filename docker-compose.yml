@@ -9,7 +9,7 @@ services:
   postgres_db:
     image: postgres
     volumes:
-     - ./data/db:/var/lib/postgresql/data
+     - ./data/db/postgres:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=${POSTGRES_DB_NAME}
       - POSTGRES_USER=${POSTGRES_USER_NAME}
@@ -24,7 +24,7 @@ services:
     volumes:
       - .:/project
     image: server:django
-    container_name: ${PROJECT_NAME}_container
+    container_name: ${PROJECT_NAME}
     command: gunicorn server.wsgi:application --bind 0.0.0.0:8000
     depends_on:
       - postgres_db
