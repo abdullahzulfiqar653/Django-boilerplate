@@ -3,39 +3,31 @@ services:
   # redis
   redis:
     image: redis
-    container_name: redis
+    container_name: ${PROJECT_NAME}_redis
 
   # Databases
-  db:
-    image: mysql:5.7
-    environment:
-      MYSQL_DATABASE: 'django-db'
-      MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
-    volumes:
-      - ./data/mysql/dbb:/var/lib/mysql
-  db1:
+  postgres_db:
     image: postgres
     volumes:
      - ./data/db:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    container_name: postgres_db
+      - POSTGRES_DB=${POSTGRES_DB_NAME}
+      - POSTGRES_USER=${POSTGRES_USER_NAME}
+      - POSTGRES_PASSWORD=${POSTGRES_DB_PASSWORD}
+    container_name: ${PROJECT_NAME}_postgres_db
 
   # Django app
-  web:
+  server:
     build: .
     ports:
       - 8000:8000
     volumes:
-      - .:/django
-    image: web:django
-    container_name: django_poject_container
-    command: python manage.py runserver 0.0.0.0:8000
+      - .:/project
+    image: server:django
+    container_name: ${PROJECT_NAME}_container
+    command: gunicorn server.wsgi:application --bind 0.0.0.0:8000
     depends_on:
-      - db
-      - db1
+      - postgres_db
 
   # Celery
   celery:
@@ -44,10 +36,9 @@ services:
       context: .
     command: celery -A server worker -l INFO
     volumes:
-      - .:/django
-    container_name: celery
+      - .:/project
+    container_name: ${PROJECT_NAME}_celery
     depends_on:
-      - db
-      - db1
       - redis
-      - web
+      - server
+      - postgres_db
