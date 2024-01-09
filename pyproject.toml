@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "django-boilerplate"
+version = "0.1.0"
+description = ""
+authors = ["Abdullah zulfiqar <abdullahzulfiqar653@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "django_boilerplate"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "5.0"
+celery = "^5.3.6"
+django-split-settings = "^1.2.0"
+pyyaml = "^6.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
