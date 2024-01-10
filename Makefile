@@ -27,4 +27,4 @@ install-pre-commit:
 	poetry run pre-commit uninstall; poetry run pre-commit install
 
 .PHONY: update
-update: install migrate;
+update: install migrate install-pre-commit;
