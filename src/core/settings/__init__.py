@@ -15,5 +15,4 @@ if not os.path.isabs(LOCAL_SETTINGS_PATH):
     # BASE_DIR is type of "<class 'pathlib.PosixPath'>" so "/" overloaded for path objects
     LOCAL_SETTINGS_PATH = str(BASE_DIR / LOCAL_SETTINGS_PATH)
 
-include('base.py', 'custom.py', optional(LOCAL_SETTINGS_PATH), 'envvars.py',
-        'docker.py')
+include('base.py', 'custom.py', optional(LOCAL_SETTINGS_PATH), 'envvars.py', 'docker.py')

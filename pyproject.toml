@@ -19,6 +19,15 @@ pyyaml = "^6.0.1"
 flake8 = "^7.0.0"
 pre-commit = "^3.6.0"
 
+
+[tool.yapf]
+based_on_style = "google"
+align_closing_bracket_with_visual_indent = true
+coalesce_brackets = true
+column_limit = 119
+dedent_closing_brackets = true
+
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
