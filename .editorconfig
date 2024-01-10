@@ -1,0 +1,7 @@
+root = true
+
+[*.{html,py}]
+charset = utf-8
+ident_size = 4
+ident_style = space
+max_line_length = 119
