@@ -10,4 +10,4 @@ def get_settings_from_environment(prefix):
     return {
         key[len(prefix):]: yaml_coerce(value)
         for key, value in os.environ.items() if key.startswith(prefix)
-        }
+    }

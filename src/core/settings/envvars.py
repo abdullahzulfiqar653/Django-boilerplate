@@ -11,4 +11,4 @@ If you export an environment variable like "PROJECT_NAME_DEBUG=true",
 You can then refer to it globally as DEBUG, where the value would be True.
 """
 
-deep_update(globals(), get_settings_from_environment(ENV_VARIABLE_PREFIX)) # type: ignore
+deep_update(globals(), get_settings_from_environment(ENV_VARIABLE_PREFIX))  # type: ignore # noqa: F821

@@ -1,5 +1,3 @@
-import os
-
 SECRET_KEY = NotImplemented
 DEBUG = False
 
