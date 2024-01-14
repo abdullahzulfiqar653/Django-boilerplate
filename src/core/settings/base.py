@@ -1,7 +1,9 @@
-SECRET_KEY = NotImplemented
-DEBUG = False
+SECRET_KEY = env('SECRET_KEY')  # noqa: F821
+DEBUG = env('DEBUG')  # noqa: F821
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env('ALLOWED_HOSTS')  # noqa: F821
+CSRF_TRUSTED_ORIGINS = env('CSRF_TRUSTED_ORIGINS')  # noqa: F821
+CORS_ALLOW_ALL_ORIGINS = env('CORS_ALLOW_ALL_ORIGINS')  # noqa: F821
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -43,12 +45,16 @@ TEMPLATES = [
 WSGI_APPLICATION = 'src.core.wsgi.application'
 
 # Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'yourdatabasename.db',
+        'CONN_MAX_AGE': 600,
+        'ATOMIC_REQUESTS': True,
+        'NAME': env('POSTGRES_DB'),  # noqa: F821
+        'HOST': env('POSTGRES_HOST'),  # noqa: F821
+        'PORT': env('POSTGRES_PORT'),  # noqa: F821
+        'USER': env('POSTGRES_USER'),  # noqa: F821
+        'PASSWORD': env('POSTGRES_PASSWORD'),  # noqa: F821
+        'ENGINE': 'django.db.backends.postgresql',
     }
 }
 
@@ -85,10 +91,10 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # noqa: F821
 
 MEDIA_URL = '/media/'
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_ROOT = BASE_DIR / 'media'  # noqa: F821
 
 CELERY_BROKER_URL = 'redis://redis:6379'
 CELERY_RESULT_BACKEND = 'redis://redis:6379'
