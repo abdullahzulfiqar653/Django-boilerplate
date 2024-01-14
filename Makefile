@@ -14,6 +14,10 @@ migrations:
 superuser:
 	poetry run python -m src.manage createsuperuser
 
+.PHONY: shell
+shell:
+	poetry run python -m src.manage shell
+
 .PHONY: runserver
 runserver:
 	poetry run python -m src.manage runserver
@@ -28,3 +32,8 @@ install-pre-commit:
 
 .PHONY: update
 update: install migrate install-pre-commit;
+
+.PHONY: services
+services:
+	test -f .env || touch .env
+	docker-compose -f docker-compose.yml up --build
