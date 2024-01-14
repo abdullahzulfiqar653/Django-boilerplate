@@ -1,44 +1,32 @@
-version: "3.9"
+version: '3.9'
+
 services:
-  # redis
-  redis:
-    image: redis
-    container_name: ${PROJECT_NAME}_redis
-
-  # Databases
-  postgres_db:
-    image: postgres
-    volumes:
-     - ./data/db/postgres:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=${POSTGRES_DB_NAME}
-      - POSTGRES_USER=${POSTGRES_USER_NAME}
-      - POSTGRES_PASSWORD=${POSTGRES_DB_PASSWORD}
-    container_name: ${PROJECT_NAME}_postgres_db
-
-  # Django app
   server:
     build: .
+    volumes:
+    - .:/opt/project
+    restart: unless-stopped
     ports:
-      - 8000:8000
-    volumes:
-      - .:/project
-    image: server:django
+      - "8000:8000"
+    depends_on:
+      - db
     container_name: ${PROJECT_NAME}
-    command: gunicorn server.wsgi:application --bind 0.0.0.0:8000
-    depends_on:
-      - postgres_db
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT}
 
-  # Celery
-  celery:
-    restart: always
-    build:
-      context: .
-    command: celery -A server worker -l INFO
+  db:
+    image: postgres
+    restart: unless-stopped
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    container_name: ${PROJECT_NAME}_db
     volumes:
-      - .:/project
-    container_name: ${PROJECT_NAME}_celery
-    depends_on:
-      - redis
-      - server
-      - postgres_db
+      - postgresql-data:/var/lib/postgresql/data
+
+volumes:
+  postgresql-data:
+    driver: local
