@@ -36,4 +36,4 @@ update: install migrate install-pre-commit;
 .PHONY: services
 services:
 	test -f .env || touch .env
-	docker-compose -f docker-compose.yml up --build
+	docker-compose -f docker-compose.dev.yml up --build

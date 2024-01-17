@@ -30,8 +30,6 @@ COPY . .
 # this installs just the source code itself, since dependencies are installed before
 RUN poetry install
 
-EXPOSE 8000
-
 COPY scripts/entrypoint.sh /entrypoint.sh
 RUN chmod a+x /entrypoint.sh
 ENTRYPOINT [ "/entrypoint.sh" ]

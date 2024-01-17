@@ -5,7 +5,7 @@ set -e
 
 # Define a variable for the Django management command to avoid repetition and improve readability.
 RUN_MANAGE_PY='poetry run python -m src.manage'
-ENVIRONMENT=${ENVIRONMENT:-production}
+ENVIRONMENT=${ENVIRONMENT:-local}
 echo "Environment: $ENVIRONMENT"
 
 # Static files need to be collected for WhiteNoise to serve them in production. This is usually
@@ -19,14 +19,23 @@ $RUN_MANAGE_PY collectstatic --no-input
 echo 'Running migrations...'
 $RUN_MANAGE_PY migrate --no-input
 
-# Start the Core API using Daphne ASGI server. Daphne is configured to listen on all network
-# interfaces (0.0.0.0) at port 8000. These settings can be customized as needed.
-echo 'Starting the Core API...'
+
+
+# Start the Project using Gunicorn in 2 Modes on server.
+# Gunicorn is configured to listen on all network interfaces (0.0.0.0) and
+# different ports according to the environment running on. Gunicorn uses
+# the WSGI application from src.core.wsgi:application.
+echo 'Starting the server...'
 
 if [ "$ENVIRONMENT" = "dev" ]; then
     echo 'Starting with Gunicorn (Development Mode)...'
-    poetry run gunicorn --reload -b 0.0.0.0:8000 src.core.wsgi:application
-else
-    echo 'Starting with Gunicorn (Production Mode)...'
     poetry run gunicorn -b 0.0.0.0:8000 src.core.wsgi:application
+
+elif [ "$ENVIRONMENT" = "prod" ]; then
+    echo 'Starting with Gunicorn (Production Mode)...'
+    poetry run gunicorn -b 0.0.0.0:8002 src.core.wsgi:application
+
+elif [ "$ENVIRONMENT" = "local" ]; then
+    echo 'Starting with Gunicorn (Local Mode)...'
+    poetry run gunicorn --reload -b 0.0.0.0:8000 src.core.wsgi:application
 fi

@@ -34,4 +34,4 @@ jobs:
 
       - name: Run Deploy
         run: |
-          ssh target "cd Django-boilerplate/ && docker-compose down && git pull && docker compose -f docker-compose.yml up --build -d"
+          ssh target "cd Django-boilerplate/ && docker-compose down && git pull && docker compose -f docker-compose.dev.yml up --build -d"
