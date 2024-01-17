@@ -28,11 +28,11 @@ $RUN_MANAGE_PY migrate --no-input
 echo 'Starting the server...'
 
 if [ "$ENVIRONMENT" = "dev" ]; then
-    echo 'Starting with Gunicorn (Development Mode)...'
+    echo 'Starting with Gunicorn (Development Env)...'
     poetry run gunicorn -b 0.0.0.0:8000 src.core.wsgi:application
 
 elif [ "$ENVIRONMENT" = "prod" ]; then
-    echo 'Starting with Gunicorn (Production Mode)...'
+    echo 'Starting with Gunicorn (Production Env)...'
     poetry run gunicorn -b 0.0.0.0:8002 src.core.wsgi:application
 
 elif [ "$ENVIRONMENT" = "local" ]; then
